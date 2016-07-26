@@ -10,6 +10,10 @@ import {
     toggleMicrophoneMuted
 } from '../../base/media';
 
+import { ColorPalette } from '../../base/styles';
+
+import { styles } from './styles';
+
 /**
  * Abstract (base) class for the conference call toolbar.
  *
@@ -28,6 +32,47 @@ export class AbstractToolbar extends Component {
         this._onCameraMute =  this._onCameraMute.bind(this);
         this._onHangup =  this._onHangup.bind(this);
         this._onMicrophoneMute =  this._onMicrophoneMute.bind(this);
+    }
+
+    /**
+     * Returns styles for mute button depending if camera or microphone is muted
+     * or not.
+     *
+     * @param {('camera'|'microphone')} type - Button to get styles for.
+     * @protected
+     * @returns {{
+     *      buttonStyle: Object
+     *      iconName: string,
+     *      iconStyle: Object
+     * }}
+     */
+    _getMuteButtonStyles(type) {
+        let buttonStyle;
+        let iconName;
+        let iconStyle;
+
+        if (this.props[type + 'Muted']) {
+            buttonStyle = {
+                ...styles.toolbarButton,
+                backgroundColor: ColorPalette.buttonUnderlay
+            };
+            iconName = this[type + 'MutedIcon'];
+            iconStyle = {
+                ...styles.icon,
+                color: 'white'
+            };
+        }
+        else {
+            buttonStyle = styles.toolbarButton;
+            iconName = this[type + 'Icon'];
+            iconStyle = styles.icon;
+        }
+
+        return {
+            buttonStyle,
+            iconName,
+            iconStyle
+        };
     }
 
     /**

@@ -28,23 +28,10 @@ class Toolbar extends AbstractToolbar {
      * @returns {ReactElement}
      */
     render() {
+        const cameraButtonStyles = this._getMuteButtonStyles('camera');
+        const microphoneButtonStyles = this._getMuteButtonStyles('microphone');
         let underlayColor = ColorPalette.buttonUnderlay;
-        let micButtonStyle;
-        let micIconStyle;
-        let micButtonIcon;
-        if (this.props.microphoneMuted) {
-            micButtonStyle = [
-                styles.toolbarButton,
-                { backgroundColor: underlayColor }
-            ];
-            micIconStyle = [styles.icon, { color: 'white' }];
-            micButtonIcon = 'mic-disabled';
-        }
-        else {
-            micButtonStyle = styles.toolbarButton;
-            micIconStyle = styles.icon;
-            micButtonIcon = 'microphone';
-        }
+
 
         // The following property is responsible to hide/show the toolbar view
         // by moving it out of site of the screen boundaries. An attempt to use
@@ -60,14 +47,12 @@ class Toolbar extends AbstractToolbar {
 
         return (
             <View style = { [styles.toolbarContainer, { bottom }] }>
-
                 <TouchableHighlight
                     onPress = { this._onMicrophoneMute }
-                    style = { micButtonStyle }>
-
+                    style = { microphoneButtonStyles.buttonStyle }>
                     <Icon
-                        name = { micButtonIcon }
-                        style = { micIconStyle } />
+                        name = { microphoneButtonStyles.iconName }
+                        style = { microphoneButtonStyles.iconStyle } />
                 </TouchableHighlight>
                 <TouchableHighlight
                     onPress = { this._onHangup }
@@ -76,24 +61,34 @@ class Toolbar extends AbstractToolbar {
                         { backgroundColor: ColorPalette.jitsiRed }
                     ] }
                     underlayColor = { underlayColor }>
-
                     <Icon
                         name = "hangup"
                         style = { [styles.icon, { color: 'white' }] } />
                 </TouchableHighlight>
                 <TouchableHighlight
                     onPress = { this._onCameraMute }
-                    style = { styles.toolbarButton }
-                    underlayColor = { underlayColor }>
-
+                    style = { cameraButtonStyles.buttonStyle }>
                     <Icon
-                        name = "photo-camera"
-                        style = { styles.icon } />
+                        name = { cameraButtonStyles.iconName }
+                        style = { cameraButtonStyles.iconStyle } />
                 </TouchableHighlight>
             </View>
         );
     }
 }
+
+/**
+ * Additional properties for various icons, which are now platform-dependent.
+ * This is done to have common logic of generating styles for web and native.
+ * TODO: as soon as we have common font sets for web and native, this will be no
+ * longer required.
+ */
+Object.assign(Toolbar.prototype, {
+    cameraIcon: 'webCam',
+    cameraMutedIcon: 'camera-disabled',
+    microphoneIcon: 'microphone',
+    microphoneMutedIcon: 'mic-disabled'
+});
 
 /**
  * Toolbar component's property types.

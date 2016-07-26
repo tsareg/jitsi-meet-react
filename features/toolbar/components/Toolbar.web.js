@@ -23,27 +23,17 @@ class Toolbar extends AbstractToolbar {
      * @returns {ReactElement}
      */
     render() {
-        let underlayColor = ColorPalette.buttonUnderlay;
-        let micButtonStyle;
-        let micButtonIcon;
-        if (this.props.microphoneMuted) {
-            micButtonStyle = {
-                ...styles.toolbarButton,
-                backgroundColor: underlayColor
-            };
-            micButtonIcon = 'microphone-slash';
-        }
-        else {
-            micButtonStyle = styles.toolbarButton;
-            micButtonIcon = 'microphone';
-        }
+        const cameraButtonStyles = this._getMuteButtonStyles('camera');
+        const microphoneButtonStyles = this._getMuteButtonStyles('microphone');
 
         return (
             <div style = { styles.toolbarContainer }>
                 <button
                     onClick = { this._onMicrophoneMute }
-                    style = { micButtonStyle }>
-                    <Icon name = { micButtonIcon } style = { styles.icon } />
+                    style = { microphoneButtonStyles.buttonStyle }>
+                    <Icon
+                        name = { microphoneButtonStyles.iconName }
+                        style = { microphoneButtonStyles.iconStyle } />
                 </button>
                 <button
                     onClick= { this._onHangup }
@@ -55,13 +45,32 @@ class Toolbar extends AbstractToolbar {
                 </button>
                 <button
                     onClick= { this._onCameraMute }
-                    style = { styles.toolbarButton }>
-                    <Icon name="camera" style = { styles.icon } />
+                    style = { cameraButtonStyles.buttonStyle }>
+                    <Icon
+                        name = { cameraButtonStyles.iconName }
+                        style = { cameraButtonStyles.iconStyle } />
                 </button>
             </div>
         );
     }
 }
+
+/**
+ * Additional properties for various icons, which are now platform-dependent.
+ * This is done to have common logic of generating styles for web and native.
+ * TODO: as soon as we have common font sets for web and native, this will be no
+ * longer required.
+ */
+Object.assign(Toolbar.prototype, {
+    cameraIcon: 'video-camera',
+    // TODO: currently for web version we're using default FontAwesome
+    // font set, which doesn't have 'slashed' version of 'video-camera'
+    // icon. But this should be changed as soon as we start to use
+    // custom Jitsi icons.
+    cameraMutedIcon: 'video-camera',
+    microphoneIcon: 'microphone',
+    microphoneMutedIcon: 'microphone-slash'
+});
 
 /**
  * Toolbar component's property types.
