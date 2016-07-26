@@ -1,19 +1,26 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
     Dimensions,
     TouchableHighlight,
     View
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import { Icon } from '../../base/fontIcons';
 import { ColorPalette } from '../../base/styles';
 
+import {
+    AbstractToolbar,
+    mapStateToProps
+} from './AbstractToolbar';
 import { styles } from './styles';
 
 /**
  * The native container rendering the in call main buttons.
+ *
+ * @extends AbstractToolbar
  */
-export class ToolbarContainer extends Component {
+class Toolbar extends AbstractToolbar {
     /**
      * Implements React's {@link Component#render()}.
      *
@@ -25,7 +32,7 @@ export class ToolbarContainer extends Component {
         let micButtonStyle;
         let micIconStyle;
         let micButtonIcon;
-        if (this.props.audioMuted) {
+        if (this.props.microphoneMuted) {
             micButtonStyle = [
                 styles.toolbarButton,
                 { backgroundColor: underlayColor }
@@ -55,7 +62,7 @@ export class ToolbarContainer extends Component {
             <View style = { [styles.toolbarContainer, { bottom }] }>
 
                 <TouchableHighlight
-                    onPress = { this.props.onAudioMute }
+                    onPress = { this._onMicrophoneMute }
                     style = { micButtonStyle }>
 
                     <Icon
@@ -63,7 +70,7 @@ export class ToolbarContainer extends Component {
                         style = { micIconStyle } />
                 </TouchableHighlight>
                 <TouchableHighlight
-                    onPress = { this.props.onHangup }
+                    onPress = { this._onHangup }
                     style = { [
                         styles.toolbarButton,
                         { backgroundColor: ColorPalette.jitsiRed }
@@ -75,7 +82,7 @@ export class ToolbarContainer extends Component {
                         style = { [styles.icon, { color: 'white' }] } />
                 </TouchableHighlight>
                 <TouchableHighlight
-                    onPress = { this.props.onCameraChange }
+                    onPress = { this._onCameraMute }
                     style = { styles.toolbarButton }
                     underlayColor = { underlayColor }>
 
@@ -89,14 +96,10 @@ export class ToolbarContainer extends Component {
 }
 
 /**
- * ToolbarContainer component's property types.
+ * Toolbar component's property types.
  *
  * @static
  */
-ToolbarContainer.propTypes = {
-    audioMuted: React.PropTypes.bool,
-    onAudioMute: React.PropTypes.func,
-    onCameraChange: React.PropTypes.func,
-    onHangup: React.PropTypes.func,
-    visible: React.PropTypes.bool
-};
+Toolbar.propTypes = AbstractToolbar.propTypes;
+
+export default connect(mapStateToProps)(Toolbar);

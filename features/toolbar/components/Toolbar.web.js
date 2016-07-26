@@ -1,14 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Icon from 'react-fontawesome';
+import { connect } from 'react-redux';
 
 import { ColorPalette } from '../../base/styles';
 
+import {
+    AbstractToolbar,
+    mapStateToProps
+} from './AbstractToolbar';
 import { styles } from './styles';
 
 /**
- * The web container rendering the toolbar.
+ * The native container rendering the in call main buttons.
+ *
+ * @extends AbstractToolbar
  */
-export class ToolbarContainer extends Component {
+class Toolbar extends AbstractToolbar {
     /**
      * Implements React's {@link Component#render()}.
      *
@@ -19,7 +26,7 @@ export class ToolbarContainer extends Component {
         let underlayColor = ColorPalette.buttonUnderlay;
         let micButtonStyle;
         let micButtonIcon;
-        if (this.props.audioMuted) {
+        if (this.props.microphoneMuted) {
             micButtonStyle = {
                 ...styles.toolbarButton,
                 backgroundColor: underlayColor
@@ -34,21 +41,21 @@ export class ToolbarContainer extends Component {
         return (
             <div style = { styles.toolbarContainer }>
                 <button
-                    style = { micButtonStyle }
-                    onClick = { () => this.props.onAudioMute() }>
+                    onClick = { this._onMicrophoneMute }
+                    style = { micButtonStyle }>
                     <Icon name = { micButtonIcon } style = { styles.icon } />
                 </button>
                 <button
+                    onClick= { this._onHangup }
                     style = { {
                         ...styles.toolbarButton,
                         backgroundColor: ColorPalette.jitsiRed
-                    } }
-                    onClick= { () => this.props.onHangup() }>
+                    } }>
                     <Icon name = "phone" style = { styles.icon } />
                 </button>
                 <button
-                    style = { styles.toolbarButton }
-                    onClick= { () => this.props.onCameraChange() }>
+                    onClick= { this._onCameraMute }
+                    style = { styles.toolbarButton }>
                     <Icon name="camera" style = { styles.icon } />
                 </button>
             </div>
@@ -57,13 +64,10 @@ export class ToolbarContainer extends Component {
 }
 
 /**
- * ToolbarContainer component's property types.
+ * Toolbar component's property types.
  *
  * @static
  */
-ToolbarContainer.propTypes = {
-    audioMuted: React.PropTypes.bool,
-    onAudioMute: React.PropTypes.func,
-    onCameraChange: React.PropTypes.func,
-    onHangup: React.PropTypes.func
-};
+Toolbar.propTypes = AbstractToolbar.propTypes;
+
+export default connect(mapStateToProps)(Toolbar);
