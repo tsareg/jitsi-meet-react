@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
 
-import { CONFERENCE_LEFT } from '../conference';
 import { ReducerRegistry } from '../redux';
 
 import {
@@ -51,8 +50,6 @@ const camera = (state = CAMERA_INITIAL_STATE, action) => {
             ...state,
             muted: action.media.camera.muted
         };
-    case CONFERENCE_LEFT:
-        return CAMERA_INITIAL_STATE;
     default:
         return state;
     }
@@ -92,8 +89,6 @@ const microphone = (state = MICROPHONE_INITIAL_STATE, action) => {
             ...state,
             muted: action.media.microphone.muted
         };
-    case CONFERENCE_LEFT:
-        return MICROPHONE_INITIAL_STATE;
     default:
         return state;
     }

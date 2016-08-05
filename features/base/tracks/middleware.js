@@ -14,6 +14,7 @@ import {
     createLocalTracks,
     destroyLocalTracks
 } from './actions';
+import { setTrackMuted } from './functions';
 
 /**
  * Middleware that captures LIB_INITIALIZED and LIB_DISPOSED actions
@@ -59,22 +60,12 @@ MiddlewareRegistry.register(store => next => action => {
  * @param {Store} store - Redux store.
  * @param {MEDIA_TYPE} mediaType - Type of track to change muted state of.
  * @param {boolean} muted - If audio stream should be muted or unmuted.
- * @returns {Promise|undefined}
+ * @returns {Promise}
  */
 function _setTrackMuted(store, mediaType, muted) {
     let tracks = store.getState()['features/base/tracks'];
     let localTrack = tracks
         .find(t => t.isLocal() && t.getType() === mediaType);
 
-    if (!localTrack) {
-        return;
-    }
-
-    if (muted) {
-        return localTrack.mute()
-            .catch(err => console.warn('Track mute was rejected:', err));
-    } else {
-        return localTrack.unmute()
-            .catch(err => console.warn('Track unmute was rejected:', err));
-    }
+    return setTrackMuted(localTrack, muted);
 }
