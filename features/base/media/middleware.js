@@ -49,6 +49,8 @@ function resetInitialMediaState(store) {
     // Optimization - do not re-create local video track if we already showing
     // "user" facing mode.
     if (mediaState.camera.facingMode !== CAMERA_FACING_MODE.USER) {
+        // TODO: fix race condition - if we put debugger after this, track is
+        // changed, otherwise - not.
         dispatch(cameraFacingModeChanged(CAMERA_FACING_MODE.USER));
     }
 
